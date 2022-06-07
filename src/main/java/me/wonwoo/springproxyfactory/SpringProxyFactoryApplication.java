@@ -39,10 +39,13 @@ public class SpringProxyFactoryApplication {
     }
 
     @Bean
-    GreetingClient gitHubClient(WebClient.Builder builder) {
-        return HttpServiceProxyFactory.builder(new WebClientAdapter(builder.build()))
-                .build()
-                .createClient(GreetingClient.class);
+    GreetingClient gitHubClient(HttpServiceProxyFactory httpServiceProxyFactory) {
+        return httpServiceProxyFactory.createClient(GreetingClient.class);
+    }
+
+    @Bean
+    HttpServiceProxyFactory httpServiceProxyFactory(WebClient.Builder builder) {
+        return new HttpServiceProxyFactory(new WebClientAdapter(builder.build()));
     }
 
     @EventListener
